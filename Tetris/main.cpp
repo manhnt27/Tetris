@@ -2,11 +2,17 @@
 #include<bits/stdc++.h>
 using namespace std;
 SDL_Window* window = NULL;
-SDL_Surface* surf=NULL;
+SDL_Surface* surface=NULL;
 SDL_Renderer* renderer = NULL;
+const int SCREEN_WIDTH=410,SCREEN_HEIGHT=555,BLOCK_SIZE=24.5;
+const char* WINDOW_TITLE="Tetris";
 SDL_Event event;
+int randomColor=0;
 struct Point
-{int x,y;} piece[4], tmpPiece[4];
+{
+    int x;
+    int y;
+} piece[4], tmpPiece[4];
 void createRect(SDL_Rect& rect,int cx,int cy,int cw,int ch)
     {
         rect.x=cx;
@@ -29,12 +35,11 @@ bool isCollision()
 {
     for(int i=0;i<4;i++)
         if(piece[i].x<0 || piece[i].x>=10 || piece[i].y>20)
-            return 0;
-        else {  //cout<<board[a[i].y][a[i].x];
-                if(board[piece[i].y][piece[i].x])
-
-            return 0;}
-    return 1;
+            return true;
+        else
+            if(board[piece[i].y][piece[i].x]!=0)
+                return true;
+    return false;
 }
 bool check()
 {
@@ -43,19 +48,43 @@ bool check()
             return true;
     return false;
 }
+void colorSelect()
+{
+    switch(randomColor)
+    {
+        case 0:
+            SDL_SetRenderDrawColor(renderer,3, 65, 174,SDL_ALPHA_OPAQUE);
+        break;
+        case 1:
+            SDL_SetRenderDrawColor(renderer,114, 203, 59,SDL_ALPHA_OPAQUE);
+        break;
+        case 2:
+            SDL_SetRenderDrawColor(renderer,255, 213, 0,SDL_ALPHA_OPAQUE);
+        break;
+        case 3:
+            SDL_SetRenderDrawColor(renderer,255, 151, 28,SDL_ALPHA_OPAQUE);
+        break;
+        case 4:
+            SDL_SetRenderDrawColor(renderer,255, 50, 19,SDL_ALPHA_OPAQUE);
+        break;
+    }
+}
 int main(int argc, char *argv[])
 {
 
      srand(time(0));
 
-     if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+     if (SDL_Init(SDL_INIT_VIDEO) !=0)
+        cout<<"Error on SDL initilization \n"<<SDL_GetError();
+        else
+        {
 
-        window= SDL_CreateWindow("Tetris", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 410, 555, SDL_WINDOW_SHOWN);
+        window= SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
         renderer=SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         SDL_Rect rectBound;
         createRect(rectBound,25,25,350,500);
 
-        int dx=0,speed=0;
+        int dx=0,speed=0,randomPiece=-1;
         bool done=false,isRotated=false,fast=false,isPressed=false,beginGame=true;
         Uint32 moveTime=0;
 
@@ -68,9 +97,17 @@ int main(int argc, char *argv[])
                 {
                     switch (event.key.keysym.sym)
                     {
-                        case SDLK_LEFT:{isPressed=true; dx=-1;}
+                        case SDLK_LEFT:
+                            {
+                                isPressed=true;
+                                dx=-1;
+                            }
                         break;
-                        case SDLK_RIGHT:{isPressed=true; dx=1;}
+                        case SDLK_RIGHT:
+                            {
+                                isPressed=true;
+                                dx=1;
+                            }
                         break;
                         case SDLK_UP: isRotated=true;
                         break;
@@ -86,26 +123,26 @@ int main(int argc, char *argv[])
             }
             SDL_SetRenderDrawColor(renderer,100,30,215,SDL_ALPHA_OPAQUE);
             SDL_RenderDrawRect(renderer,&rectBound);
-            SDL_RenderDrawLine(renderer,280,30,280,530);
+            SDL_RenderDrawLine(renderer,275,30,275,530);
             for(int i=0;i<4;i++)
                 {
                     tmpPiece[i]=piece[i];
                     piece[i].x+=dx;
                 }
-            if(!isCollision())
+            if(isCollision())
                 for(int i=0;i<4;i++)
                     piece[i]=tmpPiece[i];
-            if(isRotated)
+            if(isRotated && randomPiece!=6)
             {
-                Point p=piece[1];
+                Point rotatePiece=piece[1];
                 for(int i=0;i<4;i++)
                 {
-                    int cx=piece[i].y-p.y;
-                    int cy=piece[i].x-p.x;
-                    piece[i].x=p.x-cx;
-                    piece[i].y=p.y+cy;
+                    int cx=piece[i].y-rotatePiece.y;
+                    int cy=piece[i].x-rotatePiece.x;
+                    piece[i].x=rotatePiece.x-cx;
+                    piece[i].y=rotatePiece.y+cy;
                 }
-                if(!isCollision())
+                if(isCollision())
                     for(int i=0;i<4;i++)
                         piece[i]=tmpPiece[i];
             }
@@ -119,12 +156,14 @@ int main(int argc, char *argv[])
                     }
 
 
-                if(!isCollision() || beginGame)
-                {   if(!isCollision())
+                if(isCollision() || beginGame)
+                {   if(isCollision())
                     for(int i=0;i<4;i++)
                         board[tmpPiece[i].y][tmpPiece[i].x]=1;
-                    int randomPiece=rand()%7;
-
+                    randomPiece=rand()%7;
+                    srand(time(0));
+                    cout<<rand();
+                    randomColor=rand()%5;
                     for (int i=0;i<4;i++)
                     {
                         piece[i].x = figures[randomPiece][i]%2+4;
@@ -132,10 +171,8 @@ int main(int argc, char *argv[])
                     }
                     if(randomPiece==0)
                         for (int i=0;i<4;i++)
-                        {
-
                             piece[i].y ++;
-                        }
+
                 }
                 if(fast)
                 {
@@ -154,7 +191,7 @@ int main(int argc, char *argv[])
                         SDL_Rect idlePiece;
                         if(board[i][j]==0) continue;
                         //<<"n";
-                        createRect(idlePiece,25+j*25,25+(i-1)*25,24.5,24.5);
+                        createRect(idlePiece,25+j*25,25+(i-1)*25,BLOCK_SIZE,BLOCK_SIZE);
                         SDL_SetRenderDrawColor(renderer,116,41,215,SDL_ALPHA_OPAQUE);
                         SDL_RenderFillRect(renderer,&idlePiece);
                     }
@@ -162,10 +199,10 @@ int main(int argc, char *argv[])
                for(int i=0;i<4;i++)
                 {
 
-                    SDL_Rect rectPiece;
-                    createRect(rectPiece,25+piece[i].x*25,(piece[i].y)*25,24.5,24.5);
-                    SDL_SetRenderDrawColor(renderer,116,41,215,SDL_ALPHA_OPAQUE);
-                    SDL_RenderFillRect(renderer,&rectPiece);
+                    SDL_Rect activePiece;
+                    createRect(activePiece,25+piece[i].x*25,piece[i].y*25,BLOCK_SIZE,BLOCK_SIZE);
+                    colorSelect();
+                    SDL_RenderFillRect(renderer,&activePiece);
                 }
             SDL_RenderPresent(renderer);
         }
