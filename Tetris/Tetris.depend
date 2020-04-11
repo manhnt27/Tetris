@@ -1,5 +1,0 @@
-# depslib dependency file v1.0
-1586612250 source:d:\cproject\tetris\main.cpp
-	<SDL2/SDL.h>
-	<bits/stdc++.h>
-
