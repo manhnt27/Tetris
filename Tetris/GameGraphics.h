@@ -39,13 +39,6 @@ class LTexture
     private:
         //The actual hardware texture
         SDL_Texture* mTexture;
-
-
-        //The window renderer
-
-
-
-                //Image dimensions
         int mWidth;
         int mHeight;
 };

@@ -1,4 +1,9 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <chrono>
+#include <algorithm>
 #include"GameGraphics.h"
 
 LTexture::LTexture()

@@ -25,6 +25,8 @@ class Game
     int board[24][10],countPiece;
     const int PIECE_SIZE=24.5;
     bool mark[25][10];
+    const int BOARD_WIDTH=10;
+    const int BOARD_HEIGHT=24;
     const std::vector<std::pair<int,int> > directions{{1,0},{0,1},{-1,0},{0,-1}};
 public:
 

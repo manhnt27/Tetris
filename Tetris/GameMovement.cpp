@@ -1,4 +1,9 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <chrono>
+#include <algorithm>
 #include"GameMovement.h"
 using namespace std;
  void Game::moveLeftRight(int dx)
@@ -56,8 +61,8 @@ bool Game::isCollision() const{
     return false;
 }
 void Game::initBoard(){
-    for(int i=0;i<=23;i++)
-        for(int j=0;j<10;j++)
+    for(int i=0;i<BOARD_HEIGHT;i++)
+        for(int j=0;j<BOARD_WIDTH;j++)
             board[i][j]=0;
 }
 void Game::restorePieces(){
@@ -70,12 +75,14 @@ void Game::getColorLanded(int randomColor)
     for(int i=0;i<4;i++)
         board[tmpPiece[i].y][tmpPiece[i].x]=randomColor;
 }
+
 bool Game::checkGameOver() const{
     for(int i=0;i<10;i++)
         if(board[3][i]!=0)
             return true;
     return false;
 }
+
 void Game::initPiece(){
     for(int i=0;i<4;i++)
     {
@@ -83,6 +90,7 @@ void Game::initPiece(){
         tmpPiece[i].x=tmpPiece[i].y=0;
     }
 }
+
 void Game::showIdlePiece(SDL_Renderer* renderer){
     for(int i=4;i<=23;i++)
         for(int j=0;j<10;j++)
@@ -94,6 +102,7 @@ void Game::showIdlePiece(SDL_Renderer* renderer){
                 SDL_RenderFillRect(renderer,&idlePiece);
             }
 }
+
 void Game::showActivePiece(SDL_Renderer* renderer,int randomColor){
     for(int i=0;i<4;i++)
         if(piece[i].y>3)
@@ -104,12 +113,14 @@ void Game::showActivePiece(SDL_Renderer* renderer,int randomColor){
                 SDL_RenderFillRect(renderer,&activePiece);
             }
 }
+
 bool Game::checkDelete() const{
     for(int i=0;i<4;i++)
         if(tmpPiece[i].y<=12)
             return true;
     return false;
 }
+
 void Game::initMark(){
 
     for(int i=0;i<=23;i++)
@@ -117,11 +128,13 @@ void Game::initMark(){
             mark[i][j]=false;
     countPiece=0;
 }
+
 bool Game::isValid(int cx,int cy,int targetColor) const{
     if(cx<=24 && cx>=0 && cy<=10 && cy>=0 && !mark[cx][cy] && board[cx][cy]==targetColor)
         return true;
     return false;
 }
+
 void Game::searchPiece(int cx,int cy,int targetColor){
     for(pair<int,int> dir: directions)
     {   int tmpx=cx+dir.first,tmpy=cy+dir.second;
@@ -133,6 +146,7 @@ void Game::searchPiece(int cx,int cy,int targetColor){
         }
     }
 }
+
 void Game::deletePiece(int targetColor,int& score){
 
     if(Game::checkDelete())
