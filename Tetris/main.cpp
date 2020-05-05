@@ -170,6 +170,7 @@ void init()
     point=20;
 }
 ///////////////////////////////////////////////////////////////////////
+/////////Tham khao SDL_Wiki
 void showMessGameOver(){
     const SDL_MessageBoxButtonData buttons[] = {
         { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Exit" },
@@ -355,7 +356,7 @@ void interpretEvent(SDL_Event event,int& gameSpeed){
 
                         if(cx>=290 && cx<=359 && cy>=399 && cy<=416)
                             {
-                                pause=true;
+
                                 chooseSpeed=true;
                                 showMessSpeed(gameSpeed);
                             }

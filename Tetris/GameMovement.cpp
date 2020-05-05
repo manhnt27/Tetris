@@ -50,7 +50,7 @@ bool Game::isCollision() const{
 
     for(int i=0;i<4;i++){
 
-        if(piece[i].x<0 || piece[i].x>=10 || piece[i].y>23)
+        if(piece[i].x<0 || piece[i].x>=BOARD_WIDTH || piece[i].y>=BOARD_HEIGHT)
             return true;
         else{
 

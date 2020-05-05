@@ -1,3 +1,4 @@
+///////////////Copy///////////
 #ifndef _GAMEGRAPHICS_H_
 #define _GAMEGRAPHICSH_
 #include<SDL2/SDL.h>

@@ -12,6 +12,7 @@ struct Point
 class Game
 {
     Point tmpPiece[4],piece[4];
+    ////////Tham khao
     const int figures[7][4] =
     {
         {1,3,5,7},
