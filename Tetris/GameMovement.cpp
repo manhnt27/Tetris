@@ -130,7 +130,7 @@ void Game::initMark(){
 }
 
 bool Game::isValid(int cx,int cy,int targetColor) const{
-    if(cx<=24 && cx>=0 && cy<=10 && cy>=0 && !mark[cx][cy] && board[cx][cy]==targetColor)
+    if(cx<24 && cx>=0 && cy<10 && cy>=0 && !mark[cx][cy] && board[cx][cy]==targetColor)
         return true;
     return false;
 }
