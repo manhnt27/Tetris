@@ -170,7 +170,7 @@ void init()
     point=20;
 }
 ///////////////////////////////////////////////////////////////////////
-/////////Tham khao SDL_Wiki
+/////////Tham khao SDL_Wiki: https://wiki.libsdl.org/SDL_ShowMessageBox?highlight=%28%5CbCategoryAPI%5Cb%29%7C%28SDLFunctionTemplate%29
 void showMessGameOver(){
     const SDL_MessageBoxButtonData buttons[] = {
         { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Exit" },
