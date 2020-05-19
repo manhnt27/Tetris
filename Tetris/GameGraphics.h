@@ -1,4 +1,4 @@
-///////////////Copy///////////
+///////////////Copy: http://lazyfoo.net/tutorials/SDL/16_true_type_fonts/index.php///////////
 #ifndef _GAMEGRAPHICS_H_
 #define _GAMEGRAPHICSH_
 #include<SDL2/SDL.h>
