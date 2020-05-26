@@ -1,8 +1,9 @@
 #ifndef _GAMEMOVEMENT_H_
 #define _GAMEMOVEMENT_H_
 #include<SDL2/SDL.h>
+#include<map>
 #include"GameGraphics.h"
-
+//using namespace std;
 struct Point
 {
     int x;
@@ -23,9 +24,11 @@ class Game
         {3,5,7,6},
         {2,3,4,5},
     };
-    int board[24][10],countPiece;
+    int board[24][10],countPiece,tmpBoard[24][10];
     const int PIECE_SIZE=24.5;
     bool mark[25][10];
+    bool canMove;
+    std::map<std::pair<int,int>,int> mp;
     const int BOARD_WIDTH=10;
     const int BOARD_HEIGHT=24;
     const std::vector<std::pair<int,int> > directions{{1,0},{0,1},{-1,0},{0,-1}};
@@ -46,9 +49,11 @@ public:
     void showActivePiece(SDL_Renderer* renderer,int randomColor);
     bool checkDelete() const;
     void initMark();
-    bool isValid(int cx,int cy,int targetColor) const;
+    bool isValid(int cx,int cy) const;
     void searchPiece(int cx,int cy,int targetColor);
     void deletePiece(int targetColor,int& score);
+    void deleteAlonePiece();
+    void searchAlonePiece(int x,int y);
 };
 
 #endif // _GAMEMOVEMENT_H_

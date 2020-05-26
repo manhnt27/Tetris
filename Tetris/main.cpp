@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
                                 game.getColorLanded(randomColor);
                                 game.initMark();
                                 game.deletePiece(randomColor,point);
+                                game.deleteAlonePiece();
                             }
                             randomPiece=rand()%7;
                             randomColor=rand()%6+1;

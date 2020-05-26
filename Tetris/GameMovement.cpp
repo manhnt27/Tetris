@@ -129,8 +129,8 @@ void Game::initMark(){
     countPiece=0;
 }
 
-bool Game::isValid(int cx,int cy,int targetColor) const{
-    if(cx<24 && cx>=0 && cy<10 && cy>=0 && !mark[cx][cy] && board[cx][cy]==targetColor)
+bool Game::isValid(int cx,int cy) const{
+    if(cx<24 && cx>=0 && cy<10 && cy>=0 && !mark[cx][cy])
         return true;
     return false;
 }
@@ -138,7 +138,7 @@ bool Game::isValid(int cx,int cy,int targetColor) const{
 void Game::searchPiece(int cx,int cy,int targetColor){
     for(pair<int,int> dir: directions)
     {   int tmpx=cx+dir.first,tmpy=cy+dir.second;
-        if(isValid(tmpx,tmpy,targetColor))
+        if(isValid(tmpx,tmpy) && board[tmpx][tmpy]==targetColor)
         {
             mark[tmpx][tmpy]=true;
             countPiece++;
@@ -160,5 +160,78 @@ void Game::deletePiece(int targetColor,int& score){
         score+=4;
 
     }
+}
+
+void Game::searchAlonePiece(int x,int y){
+    for(pair<int,int> dir: directions)
+    {
+        mp[{x,y}]=board[x][y];
+        if(x==23) {canMove=true;}
+        int tmpx=x+dir.first,tmpy=y+dir.second;
+        if(isValid(tmpx,tmpy) && board[tmpx][tmpy]!=0)
+        {
+            mark[tmpx][tmpy]=true;
+            searchAlonePiece(tmpx,tmpy);
+        }
+    }
+
+}
+
+void Game::deleteAlonePiece(){
+    mp.clear();
+    for(int i=0;i<24;i++)
+        for(int j=0;j<10;j++){
+            tmpBoard[i][j]=board[i][j];
+            mark[i][j]=false;
+        }
+    for(int i=0;i<24;i++)
+        for(int j=0;j<10;j++){
+        canMove=false;
+        if(board[i][j]!=0 && !mark[i][j]){
+            searchAlonePiece(i,j);
+        //cout<<"h"<<i<<" "<<j<<"\n";
+        if(!canMove){
+            map<pair<int,int>,int> tmpMap=mp;
+            bool collision=false;
+            int len=mp.size();
+            int prev[len+1],next[len+1],coorx[len+1],id=0;
+
+            for(auto it=tmpMap.begin();it!=tmpMap.end();it++)
+                {
+                    pair<int,int> pr=it->first;
+                    int cx=pr.first,cy=pr.second;
+                    tmpBoard[cx][cy]=0;
+                    next[id]=cx;
+                    coorx[id]=cy;
+                    id++;
+
+                }
+
+            while(!collision){
+
+                for(int i=0;i<len;i++)
+                {
+                    prev[i]=next[i];
+                    next[i]++;
+
+                    if(tmpBoard[next[i]][coorx[i]]!=0 || next[i]==24) {collision=true;}
+                }
+
+            }
+            id=0;
+            for(auto it=tmpMap.begin();it!=tmpMap.end();it++)
+                {
+                    tmpBoard[prev[id]][coorx[id]]=it->second;
+                    id++;
+                }
+        }
+
+        mp.clear();
+        }
+    }
+    for(int i=0;i<24;i++)
+        for(int j=0;j<10;j++)
+            board[i][j]=tmpBoard[i][j];
+
 }
 
